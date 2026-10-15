@@ -257,10 +257,4 @@ roll-number, university, and department placeholders before presenting. Its UI
 screenshots show the actual local homepage, sample-fallback menu, and empty
 cart; database-backed behavior is explicitly marked unverified.
 
-### One next local setup step
 
-Before demonstrating MySQL-backed features, configure `CANTEEN_DB_URL`,
-`CANTEEN_DB_USER`, and `CANTEEN_DB_PASSWORD` in the same local PowerShell
-process used to start Tomcat, then restart Tomcat. Keep the password private;
-do not paste it into source code, the README, or chat. No database changes are
-needed for this step.
