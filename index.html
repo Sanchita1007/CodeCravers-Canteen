@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fffaf2">
+    <title>CodeCravers Canteen | Good food, less waiting</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+    <header>
+        <h1>CodeCravers Canteen</h1>
+        <nav aria-label="Main navigation">
+            <a href="index.html" aria-current="page">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#house"></use></svg>
+                Home
+            </a>
+            <a href="menu.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#utensils"></use></svg>
+                Menu
+            </a>
+            <a href="cart.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#shopping-cart"></use></svg>
+                Cart
+            </a>
+            <a href="app/orders">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#clipboard-list"></use></svg>
+                My Orders
+            </a>
+            <a href="app/login">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#log-in"></use></svg>
+                Login
+            </a>
+            <a href="app/admin">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#layout-dashboard"></use></svg>
+                Admin
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <span class="eyebrow">Your campus, your canteen</span>
+                <h2 id="hero-title">Good food.<br>Less waiting.</h2>
+                <p>Fresh campus favourites are just a few clicks away. Pick your meal, place your order, and get back to your day.</p>
+                <a class="button" href="menu.html">
+                    Explore the menu
+                    <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#arrow-right"></use></svg>
+                </a>
+            </div>
+            <div class="hero-art">
+                <img class="hero-photo" src="assets/food/veg-burger.jpg" alt="Freshly made burger with crisp lettuce and tomato" fetchpriority="high">
+            </div>
+        </section>
+
+        <section aria-labelledby="popular-title">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Made for your break</span>
+                    <h2 id="popular-title">Campus favourites</h2>
+                    <p>Quick bites and feel-good classics, ready when you are.</p>
+                </div>
+                <a class="button-link" href="menu.html">See the full menu</a>
+            </div>
+
+            <div class="features">
+                <article class="card">
+                    <div class="food-visual">
+                        <img class="food-photo" src="assets/food/veg-burger.jpg" alt="Veg burger with fresh toppings" loading="lazy">
+                    </div>
+                    <span class="food-category">Fresh favourite</span>
+                    <h3>Veg Burger</h3>
+                    <p>Fresh vegetable burger</p>
+                    <strong>₹60</strong>
+                </article>
+                <article class="card">
+                    <div class="food-visual">
+                        <img class="food-photo" src="assets/food/masala-dosa.jpg" alt="Crispy masala dosa served with chutney" loading="lazy">
+                    </div>
+                    <span class="food-category">South Indian</span>
+                    <h3>Masala Dosa</h3>
+                    <p>Crispy dosa with potato filling</p>
+                    <strong>₹80</strong>
+                </article>
+                <article class="card">
+                    <div class="food-visual">
+                        <img class="food-photo" src="assets/food/cold-coffee.jpg" alt="Chilled coffee drink" loading="lazy">
+                    </div>
+                    <span class="food-category">Cool sips</span>
+                    <h3>Cold Coffee</h3>
+                    <p>A chilled coffee break</p>
+                    <strong>₹40</strong>
+                </article>
+            </div>
+        </section>
+
+        <section aria-labelledby="why-title">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Simple from start to finish</span>
+                    <h2 id="why-title">Your lunch, made easier</h2>
+                </div>
+            </div>
+            <div class="features">
+                <article class="card">
+                    <h3><svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#leaf"></use></svg>Fresh food</h3>
+                    <p>Explore the food available at your college canteen.</p>
+                </article>
+                <article class="card">
+                    <h3><svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#shopping-basket"></use></svg>Easy ordering</h3>
+                    <p>Select your favourites and prepare your order online.</p>
+                </article>
+                <article class="card">
+                    <h3><svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#package-check"></use></svg>Order updates</h3>
+                    <p>Visit your orders page to check their latest status.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>CodeCravers Canteen · Good food, right on campus.</p>
+    </footer>
+</body>
+</html>

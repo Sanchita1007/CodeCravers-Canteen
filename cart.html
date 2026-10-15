@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - CodeCravers Canteen</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+    <header>
+        <h1>CodeCravers Canteen</h1>
+        <nav aria-label="Main navigation">
+            <a href="index.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#house"></use></svg>
+                Home
+            </a>
+            <a href="menu.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#utensils"></use></svg>
+                Menu
+            </a>
+            <a href="cart.html" aria-current="page">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#shopping-cart"></use></svg>
+                Cart
+            </a>
+            <a href="app/orders">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#clipboard-list"></use></svg>
+                My Orders
+            </a>
+            <a href="app/login">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#log-in"></use></svg>
+                Login
+            </a>
+            <a href="app/admin">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#layout-dashboard"></use></svg>
+                Admin
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Your Shopping Cart</h2>
+        <p class="intro">Review the items you have selected from our menu.</p>
+
+        <p id="cart-message" class="error-message" role="alert" hidden></p>
+        <div id="cart-items" class="cart-list" aria-live="polite"></div>
+        <div id="cart-summary"></div>
+        <div id="checkout-area"></div>
+    </main>
+
+    <footer>
+        <p>CodeCravers | Canteen Food Ordering System</p>
+    </footer>
+
+    <script src="assets/food-images.js"></script>
+    <script>
+        // Keep using the same key and item fields as the menu page.
+        const cartStorageKey = "cart";
+        const cartItemsElement = document.getElementById("cart-items");
+        const cartSummaryElement = document.getElementById("cart-summary");
+        const checkoutAreaElement = document.getElementById("checkout-area");
+        const cartMessageElement = document.getElementById("cart-message");
+
+        function makeIcon(name) {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", "icon");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("aria-hidden", "true");
+            svg.setAttribute("focusable", "false");
+            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            use.setAttribute("href", "assets/lucide.svg#" + name);
+            svg.appendChild(use);
+            return svg;
+        }
+
+        function setButtonContent(button, iconName, label) {
+            button.append(makeIcon(iconName), document.createTextNode(label));
+        }
+
+        function showMessage(message) {
+            cartMessageElement.textContent = message;
+            cartMessageElement.hidden = false;
+        }
+
+        function clearMessage() {
+            cartMessageElement.textContent = "";
+            cartMessageElement.hidden = true;
+        }
+
+        // Read and check saved data before using it to calculate prices.
+        function readCart() {
+            try {
+                const savedCart = localStorage.getItem(cartStorageKey);
+                const cart = savedCart ? JSON.parse(savedCart) : [];
+
+                if (!Array.isArray(cart)) {
+                    throw new Error("Cart data is not a list.");
+                }
+
+                for (const item of cart) {
+                    if (!item
+                        || typeof item.name !== "string"
+                        || !Number.isFinite(item.price)
+                        || item.price < 0
+                        || !Number.isInteger(item.quantity)
+                        || item.quantity < 1) {
+                        throw new Error("A cart item has invalid details.");
+                    }
+                }
+
+                return cart;
+            } catch (error) {
+                showMessage("The saved cart could not be read. Use Clear Cart to start again.");
+                return null;
+            }
+        }
+
+        // Save changes and redraw the list and total from the saved cart.
+        function saveCart(cart) {
+            try {
+                localStorage.setItem(cartStorageKey, JSON.stringify(cart));
+                clearMessage();
+                renderCart();
+            } catch (error) {
+                showMessage("Your cart could not be saved in this browser.");
+            }
+        }
+
+        function formatPrice(amount) {
+            return "₹" + amount.toFixed(2);
+        }
+
+        function renderCart() {
+            clearMessage();
+            cartItemsElement.replaceChildren();
+            cartSummaryElement.replaceChildren();
+            checkoutAreaElement.replaceChildren();
+
+            const cart = readCart();
+            if (cart === null) {
+                const clearButton = document.createElement("button");
+                clearButton.type = "button";
+                clearButton.className = "clear-button";
+                setButtonContent(clearButton, "trash", "Clear Cart");
+                clearButton.addEventListener("click", clearCart);
+                cartSummaryElement.appendChild(clearButton);
+                return;
+            }
+
+            if (cart.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.className = "empty-message";
+                emptyMessage.append(makeIcon("shopping-basket"),
+                    document.createTextNode(" Your cart is empty. Visit the menu to find something tasty!"));
+                cartItemsElement.appendChild(emptyMessage);
+
+                const menuLink = document.createElement("a");
+                menuLink.className = "button-link";
+                menuLink.href = "menu.html";
+                setButtonContent(menuLink, "utensils", "Return to Menu");
+                cartItemsElement.appendChild(menuLink);
+                return;
+            }
+
+            let totalPrice = 0;
+
+            // Build each row with textContent so saved names are displayed as text.
+            cart.forEach(function (item, index) {
+                const itemSubtotal = item.price * item.quantity;
+                totalPrice += itemSubtotal;
+
+                const itemCard = document.createElement("section");
+                itemCard.className = "cart-item";
+
+                const itemImage = document.createElement("img");
+                itemImage.className = "cart-item-image";
+                itemImage.src = window.CanteenFoodImages.imageFor(item.name);
+                itemImage.alt = item.name;
+                itemImage.loading = "lazy";
+                itemImage.addEventListener("error", function () {
+                    itemImage.hidden = true;
+                });
+
+                const itemInformation = document.createElement("div");
+                const itemName = document.createElement("h3");
+                itemName.className = "item-name";
+                itemName.textContent = item.name;
+
+                const itemPrice = document.createElement("p");
+                itemPrice.className = "item-details";
+                itemPrice.textContent = "Price: " + formatPrice(item.price) + " each";
+
+                const subtotal = document.createElement("p");
+                subtotal.className = "item-subtotal";
+                subtotal.textContent = "Subtotal: " + formatPrice(itemSubtotal);
+
+                itemInformation.append(itemName, itemPrice, subtotal);
+
+                const controls = document.createElement("div");
+                controls.className = "item-controls";
+
+                const decreaseButton = document.createElement("button");
+                decreaseButton.type = "button";
+                decreaseButton.appendChild(makeIcon("minus"));
+                decreaseButton.setAttribute("aria-label", "Decrease quantity of " + item.name);
+                decreaseButton.addEventListener("click", function () {
+                    changeQuantity(index, -1);
+                });
+
+                const quantity = document.createElement("span");
+                quantity.className = "quantity";
+                quantity.textContent = item.quantity;
+                quantity.setAttribute("aria-label", "Quantity");
+
+                const increaseButton = document.createElement("button");
+                increaseButton.type = "button";
+                increaseButton.appendChild(makeIcon("plus"));
+                increaseButton.setAttribute("aria-label", "Increase quantity of " + item.name);
+                increaseButton.addEventListener("click", function () {
+                    changeQuantity(index, 1);
+                });
+
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.className = "remove-button";
+                setButtonContent(removeButton, "trash", "Remove");
+                removeButton.addEventListener("click", function () {
+                    removeItem(index);
+                });
+
+                controls.append(decreaseButton, quantity, increaseButton, removeButton);
+                itemCard.append(itemImage, itemInformation, controls);
+                cartItemsElement.appendChild(itemCard);
+            });
+
+            const summary = document.createElement("section");
+            summary.className = "cart-summary";
+
+            const total = document.createElement("p");
+            total.className = "total";
+            total.textContent = "Total: " + formatPrice(totalPrice);
+
+            const actions = document.createElement("div");
+            actions.className = "summary-actions";
+
+            const menuLink = document.createElement("a");
+            menuLink.className = "button-link";
+            menuLink.href = "menu.html";
+            setButtonContent(menuLink, "utensils", "Return to Menu");
+
+            const clearButton = document.createElement("button");
+            clearButton.type = "button";
+            clearButton.className = "clear-button";
+            setButtonContent(clearButton, "trash", "Clear Cart");
+            clearButton.addEventListener("click", clearCart);
+
+            const loginLink = document.createElement("a");
+            loginLink.className = "button-link";
+            loginLink.href = "app/login";
+            setButtonContent(loginLink, "log-in", "Log in");
+
+            const ordersLink = document.createElement("a");
+            ordersLink.className = "button-link";
+            ordersLink.href = "app/orders";
+            setButtonContent(ordersLink, "clipboard-list", "My Orders");
+
+            actions.append(menuLink, clearButton, loginLink, ordersLink);
+            summary.append(total, actions);
+            cartSummaryElement.appendChild(summary);
+
+            // The checkout form sends item IDs and quantities, never trusted prices.
+            const checkoutForm = document.createElement("form");
+            checkoutForm.method = "post";
+            checkoutForm.action = "app/checkout";
+            checkoutForm.className = "cart-summary";
+
+            let allItemsHaveIds = true;
+            cart.forEach(function (item) {
+                if (!Number.isInteger(item.foodId) || item.foodId < 1) {
+                    allItemsHaveIds = false;
+                }
+
+                const foodIdInput = document.createElement("input");
+                foodIdInput.type = "hidden";
+                foodIdInput.name = "foodId";
+                foodIdInput.value = item.foodId || "";
+
+                const quantityInput = document.createElement("input");
+                quantityInput.type = "hidden";
+                quantityInput.name = "quantity";
+                quantityInput.value = item.quantity;
+
+                checkoutForm.append(foodIdInput, quantityInput);
+            });
+
+            const paymentLabel = document.createElement("label");
+            paymentLabel.textContent = "Payment method ";
+            const paymentSelect = document.createElement("select");
+            paymentSelect.name = "paymentMethod";
+
+            const cashOption = document.createElement("option");
+            cashOption.value = "CASH";
+            cashOption.textContent = "Cash";
+            const onlineOption = document.createElement("option");
+            onlineOption.value = "ONLINE";
+            onlineOption.textContent = "Simulated Online (no payment is taken)";
+            paymentSelect.append(cashOption, onlineOption);
+            paymentLabel.appendChild(paymentSelect);
+
+            const checkoutButton = document.createElement("button");
+            checkoutButton.type = "submit";
+            setButtonContent(checkoutButton, "shopping-basket", "Place Order");
+            checkoutButton.disabled = !allItemsHaveIds;
+
+            checkoutForm.append(paymentLabel, checkoutButton);
+            checkoutForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                if (!allItemsHaveIds) {
+                    showMessage("Return to the database menu and add these items again before checkout.");
+                    return;
+                }
+
+                checkoutButton.disabled = true;
+                showMessage("Checking your student login...");
+                fetch("app/checkout-token")
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error("Log in with a student account before placing an order.");
+                        }
+                        return response.json();
+                    })
+                    .then(function (tokens) {
+                        ["csrfToken", "checkoutToken"].forEach(function (name) {
+                            const input = document.createElement("input");
+                            input.type = "hidden";
+                            input.name = name;
+                            input.value = tokens[name];
+                            checkoutForm.appendChild(input);
+                        });
+                        clearMessage();
+                        HTMLFormElement.prototype.submit.call(checkoutForm);
+                    })
+                    .catch(function (error) {
+                        showMessage(error.message);
+                        checkoutButton.disabled = false;
+                        const loginLink = document.createElement("a");
+                        loginLink.href = "app/login";
+                        setButtonContent(loginLink, "log-in", " Log in");
+                        cartMessageElement.appendChild(loginLink);
+                    });
+            });
+            checkoutAreaElement.appendChild(checkoutForm);
+        }
+
+        function changeQuantity(itemIndex, amount) {
+            const cart = readCart();
+            if (cart === null || !cart[itemIndex]) {
+                return;
+            }
+
+            cart[itemIndex].quantity += amount;
+
+            // Remove an item when its quantity is reduced below one.
+            if (cart[itemIndex].quantity < 1) {
+                cart.splice(itemIndex, 1);
+            }
+
+            saveCart(cart);
+        }
+
+        function removeItem(itemIndex) {
+            const cart = readCart();
+            if (cart === null) {
+                return;
+            }
+
+            cart.splice(itemIndex, 1);
+            saveCart(cart);
+        }
+
+        function clearCart() {
+            try {
+                localStorage.removeItem(cartStorageKey);
+                clearMessage();
+                renderCart();
+            } catch (error) {
+                showMessage("The cart could not be cleared in this browser.");
+            }
+        }
+
+        renderCart();
+    </script>
+</body>
+</html>

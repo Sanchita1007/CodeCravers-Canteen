@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fffaf2">
+    <title>Menu | CodeCravers Canteen</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+    <header>
+        <h1>CodeCravers Canteen</h1>
+        <nav aria-label="Main navigation">
+            <a href="index.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#house"></use></svg>
+                Home
+            </a>
+            <a href="menu.html" aria-current="page">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#utensils"></use></svg>
+                Menu
+            </a>
+            <a href="cart.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#shopping-cart"></use></svg>
+                Cart
+            </a>
+            <a href="app/orders">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#clipboard-list"></use></svg>
+                My Orders
+            </a>
+            <a href="app/login">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#log-in"></use></svg>
+                Login
+            </a>
+            <a href="app/admin">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#layout-dashboard"></use></svg>
+                Admin
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <span class="eyebrow">Fresh from the canteen</span>
+        <h2>Find your new favourite</h2>
+        <p class="intro">Fresh campus favourites, ready for your next break.</p>
+
+        <div class="menu-tools">
+            <label class="menu-search">
+                <span class="sr-only">Search the menu</span>
+                <svg class="icon search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="assets/lucide.svg#search"></use></svg>
+                <input id="menu-search" type="search" placeholder="Search food..." autocomplete="off">
+            </label>
+            <div class="menu-categories" role="group" aria-label="Filter by food category">
+                <button class="category-chip" type="button" data-category="all" aria-pressed="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/lucide.svg#sliders-horizontal"></use></svg>Everything</button>
+                <button class="category-chip" type="button" data-category="fast-food" aria-pressed="false">Burgers &amp; Fast Food</button>
+                <button class="category-chip" type="button" data-category="meals" aria-pressed="false">Indian Meals</button>
+                <button class="category-chip" type="button" data-category="snacks" aria-pressed="false">Snacks</button>
+                <button class="category-chip" type="button" data-category="drinks" aria-pressed="false">Drinks</button>
+            </div>
+        </div>
+
+        <p id="menu-source-message" class="menu-source-message" role="status" aria-live="polite">
+            Sample dishes are shown while the live database menu loads.
+        </p>
+        <p id="menu-filter-message" class="menu-action-message" role="status" aria-live="polite" hidden></p>
+        <p id="menu-message" class="menu-action-message" role="status" aria-live="polite"></p>
+        <div class="menu-container" id="menu-container" aria-live="polite"></div>
+    </main>
+
+    <footer>
+        <p>CodeCravers Canteen · Good food, right on campus.</p>
+    </footer>
+
+    <script src="assets/food-images.js"></script>
+    <script>
+        const menuStorageKey = "cart";
+        const menuContainer = document.getElementById("menu-container");
+        const menuMessage = document.getElementById("menu-message");
+        const menuSourceMessage = document.getElementById("menu-source-message");
+        const menuFilterMessage = document.getElementById("menu-filter-message");
+        const searchInput = document.getElementById("menu-search");
+        const categoryButtons = document.querySelectorAll(".category-chip");
+        let selectedCategory = "all";
+
+        // These sample dishes keep the menu useful when database settings are absent.
+        // They deliberately have no food IDs because they are not saved in MySQL.
+        const sampleFoods = [
+            { name: "Veg Burger", price: 60, category: "fast-food", description: "Crispy vegetable patty with fresh toppings." },
+            { name: "Cheese Burger", price: 80, category: "fast-food", description: "A veggie burger finished with melted cheese." },
+            { name: "Paneer Burger", price: 90, category: "fast-food", description: "Spiced paneer patty in a soft toasted bun." },
+            { name: "Veg Pizza", price: 120, category: "fast-food", description: "A shareable pizza topped with vegetables." },
+            { name: "Margherita Pizza", price: 110, category: "fast-food", description: "Classic tomato, herbs and cheese." },
+            { name: "French Fries", price: 50, category: "fast-food", description: "Golden, lightly salted potato fries." },
+            { name: "Veg Sandwich", price: 50, category: "fast-food", description: "Fresh vegetables layered between soft bread." },
+            { name: "Grilled Cheese Sandwich", price: 70, category: "fast-food", description: "Toasted bread with a warm cheese filling." },
+            { name: "Masala Dosa", price: 80, category: "meals", description: "Crispy dosa with a spiced potato filling." },
+            { name: "Plain Dosa", price: 60, category: "meals", description: "Thin, crisp dosa served with chutney." },
+            { name: "Idli Sambhar", price: 50, category: "meals", description: "Soft idlis served with warm sambhar." },
+            { name: "Chole Bhature", price: 90, category: "meals", description: "Fluffy bhature with hearty chickpea curry." },
+            { name: "Rajma Rice", price: 80, category: "meals", description: "Comforting kidney bean curry with rice." },
+            { name: "Chole Rice", price: 80, category: "meals", description: "Spiced chickpea curry served with rice." },
+            { name: "Veg Biryani", price: 100, category: "meals", description: "Fragrant rice cooked with vegetables and spices." },
+            { name: "Paneer Roll", price: 80, category: "meals", description: "Spiced paneer wrapped in a soft roll." },
+            { name: "Samosa (2 pieces)", price: 30, category: "snacks", description: "Two crisp pastries with a savoury filling." },
+            { name: "Veg Momos", price: 60, category: "snacks", description: "Steamed vegetable dumplings with chutney." },
+            { name: "Spring Rolls", price: 60, category: "snacks", description: "Crunchy rolls filled with seasoned vegetables." },
+            { name: "Aloo Tikki Burger", price: 50, category: "snacks", description: "Potato tikki and fresh toppings in a bun." },
+            { name: "Cold Coffee", price: 40, category: "drinks", description: "Chilled coffee for a refreshing break." },
+            { name: "Masala Chai", price: 20, category: "drinks", description: "Warm tea brewed with aromatic spices." },
+            { name: "Lemon Soda", price: 30, category: "drinks", description: "A fizzy, tangy lemon cooler." },
+            { name: "Mango Shake", price: 50, category: "drinks", description: "A creamy shake made with mango flavour." }
+        ];
+
+        function addToCart(foodId, name, price) {
+            // Keep the existing cart key and item fields used by cart.html.
+            let cart;
+            try {
+                const savedCart = localStorage.getItem(menuStorageKey);
+                cart = savedCart ? JSON.parse(savedCart) : [];
+                if (!Array.isArray(cart)) {
+                    throw new Error("Saved cart data is not a list.");
+                }
+            } catch (error) {
+                menuMessage.textContent =
+                    "The saved cart could not be read. Open the cart and clear it before adding items.";
+                return;
+            }
+
+            const existingItem = cart.find(function (item) {
+                return item.name === name;
+            });
+
+            if (existingItem) {
+                existingItem.quantity++;
+                existingItem.price = price;
+                if (Number.isInteger(foodId) && foodId > 0) {
+                    existingItem.foodId = foodId;
+                }
+            } else {
+                const newItem = {
+                    name: name,
+                    price: price,
+                    quantity: 1
+                };
+                // Only real database menu items have IDs needed for checkout.
+                if (Number.isInteger(foodId) && foodId > 0) {
+                    newItem.foodId = foodId;
+                }
+                cart.push(newItem);
+            }
+
+            try {
+                localStorage.setItem(menuStorageKey, JSON.stringify(cart));
+                menuMessage.textContent = name + " added to your cart.";
+            } catch (error) {
+                menuMessage.textContent = "Your browser could not save the cart.";
+            }
+        }
+
+        function categoryForFood(name) {
+            const lowerName = name.toLowerCase();
+            if (lowerName.includes("coffee") || lowerName.includes("chai")
+                || lowerName.includes("soda") || lowerName.includes("shake")
+                || lowerName.includes("drink")) {
+                return "drinks";
+            }
+            if (lowerName.includes("samosa") || lowerName.includes("momo")
+                || lowerName.includes("spring roll")
+                || lowerName.includes("aloo tikki burger")) {
+                return "snacks";
+            }
+            if (lowerName.includes("burger") || lowerName.includes("pizza")
+                || lowerName.includes("fries") || lowerName.includes("sandwich")) {
+                return "fast-food";
+            }
+            return "meals";
+        }
+
+        function makeIcon(name, className) {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", className || "icon");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("aria-hidden", "true");
+            svg.setAttribute("focusable", "false");
+
+            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            use.setAttribute("href", "assets/lucide.svg#" + name);
+            svg.appendChild(use);
+            return svg;
+        }
+
+        function addMenuCard(food, targetContainer) {
+            if (!food || typeof food.name !== "string"
+                || !Number.isFinite(Number(food.price))) {
+                throw new Error("Menu item data is invalid.");
+            }
+
+            const category = food.category || categoryForFood(food.name);
+            const categoryLabels = {
+                "fast-food": "Burgers & Fast Food",
+                meals: "Indian Meals",
+                snacks: "Snacks",
+                drinks: "Drinks"
+            };
+            const card = document.createElement("article");
+            card.className = "food-card";
+            card.dataset.name = food.name.toLowerCase();
+            card.dataset.category = category;
+            card.dataset.search = (food.name + " " + (food.description || "") + " "
+                + (categoryLabels[category] || "")).toLowerCase();
+
+            const visual = document.createElement("div");
+            visual.className = "food-visual";
+            const image = document.createElement("img");
+            image.className = "food-photo";
+            image.src = window.CanteenFoodImages.imageFor(food.name, category);
+            image.alt = food.name;
+            image.loading = "lazy";
+            image.addEventListener("error", function () {
+                image.hidden = true;
+            });
+            visual.appendChild(image);
+
+            const categoryLabel = document.createElement("span");
+            categoryLabel.className = "food-category";
+            categoryLabel.appendChild(document.createTextNode(categoryLabels[category] || "Indian Meals"));
+            const sourceBadge = document.createElement("span");
+            sourceBadge.className = "food-source-badge";
+            sourceBadge.textContent = Number.isInteger(Number(food.foodId)) && Number(food.foodId) > 0
+                ? "Live database item"
+                : "Sample menu item";
+
+            const name = document.createElement("h3");
+            name.textContent = food.name;
+
+            const description = document.createElement("p");
+            description.textContent = food.description || "A campus canteen favourite.";
+
+            const price = document.createElement("p");
+            price.className = "price";
+            const itemPrice = Number(food.price);
+            price.textContent = "₹" + (Number.isInteger(itemPrice)
+                ? itemPrice
+                : itemPrice.toFixed(2));
+
+            const availability = document.createElement("p");
+            const isAvailable = food.available !== false;
+            availability.className = isAvailable ? "availability" : "availability unavailable";
+            availability.textContent = isAvailable ? "Available" : "Currently unavailable";
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = isAvailable ? "Add to Cart" : "Unavailable";
+            button.disabled = !isAvailable;
+            if (isAvailable) {
+                button.prepend(makeIcon("plus"));
+            }
+            button.addEventListener("click", function () {
+                addToCart(Number(food.foodId), food.name, Number(food.price));
+            });
+
+            card.append(visual, categoryLabel, sourceBadge, name, description, price, availability, button);
+            (targetContainer || menuContainer).appendChild(card);
+        }
+
+        function filterMenu() {
+            const searchText = searchInput.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            menuContainer.querySelectorAll(".food-card").forEach(function (card) {
+                const matchesSearch = card.dataset.search.includes(searchText);
+                const matchesCategory = selectedCategory === "all"
+                    || card.dataset.category === selectedCategory;
+                card.hidden = !matchesSearch || !matchesCategory;
+                if (!card.hidden) {
+                    visibleCount++;
+                }
+            });
+
+            if (visibleCount === 0) {
+                menuFilterMessage.textContent = "No menu items match this search.";
+                menuFilterMessage.hidden = false;
+            } else {
+                menuFilterMessage.textContent = "";
+                menuFilterMessage.hidden = true;
+            }
+        }
+
+        searchInput.addEventListener("input", filterMenu);
+        categoryButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                selectedCategory = button.dataset.category;
+                categoryButtons.forEach(function (otherButton) {
+                    otherButton.setAttribute("aria-pressed", String(otherButton === button));
+                });
+                filterMenu();
+            });
+        });
+
+        sampleFoods.forEach(function (food) {
+            addMenuCard(food);
+        });
+        filterMenu();
+
+        // Replace sample cards only after real database menu data loads.
+        fetch("app/menu-data")
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Menu service is unavailable.");
+                }
+                return response.json();
+            })
+            .then(function (foods) {
+                if (!Array.isArray(foods)) {
+                    throw new Error("Menu service returned invalid data.");
+                }
+                if (foods.length > 0) {
+                    const databaseCards = document.createDocumentFragment();
+                    foods.forEach(function (food) {
+                        addMenuCard(food, databaseCards);
+                    });
+                    menuContainer.replaceChildren(databaseCards);
+                    menuSourceMessage.textContent =
+                        "Showing menu items and availability from the live database.";
+                } else {
+                    menuSourceMessage.textContent =
+                        "No database menu items are available yet. Showing sample dishes; they are not saved in MySQL.";
+                }
+                filterMenu();
+            })
+            .catch(function () {
+                menuContainer.replaceChildren();
+                sampleFoods.forEach(function (food) {
+                    addMenuCard(food);
+                });
+                menuSourceMessage.textContent =
+                    "Showing sample dishes because the live database menu is unavailable. These dishes are not saved in MySQL.";
+                filterMenu();
+            });
+    </script>
+</body>
+</html>
