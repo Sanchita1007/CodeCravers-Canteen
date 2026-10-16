@@ -1,0 +1,53 @@
+Wikimedia Commons photographs bundled in this folder
+These photos are resized/cropped for use on the menu and homepage.
+
+aloo-tikki-burger.jpg
+  "Aloo Tikki Burger.jpg" by Vikramdewangan22889
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Aloo_Tikki_Burger.jpg
+
+chole-bhature.jpg
+  "Chole Bhature 6.jpg" by Gannu03
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Chole_Bhature_6.jpg
+
+chole-rice.jpg
+  "Chole Chawal.jpg" by Prarthita Jain
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Chole_Chawal.jpg
+
+lemon-soda.jpg
+  "Nimbu Soda Or Lemon Soda.jpg" by Manjeshwari poet mysore
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Nimbu_Soda_Or_Lemon_Soda.jpg
+
+mango-shake.jpg
+  "IndianMangoMilkshake.jpg" by HungryKya
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:IndianMangoMilkshake.jpg
+
+paneer-burger.jpg
+  "Caffine Rush Smoothie and Achari Paneer Burger - The Honeyed Tale Cafe,
+  Vadodara - 04.jpg" by Bhagyashri Wakhale
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Caffine_Rush_Smoothie_and_Achari_Paneer_Burger_-_The_Honeyed_Tale_Cafe,_Vadodara_-_04.jpg
+
+plain-dosa.jpg
+  "Plain Dosa from North India.jpg" by Libreravi
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Plain_Dosa_from_North_India.jpg
+
+spring-rolls.jpg
+  "Golden Vegetable Spring Rolls Served with Dipping Sauce.jpg" by Srujanabotcha
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Golden_Vegetable_Spring_Rolls_Served_with_Dipping_Sauce.jpg
+
+veg-biryani.jpg
+  "Dum veg biryani by fatima.jpg" by Fatimahope
+  CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+  Source: https://commons.wikimedia.org/wiki/File:Dum_veg_biryani_by_fatima.jpg
+
+veg-burger.jpg
+  "Fancy Veggie Burger and Fries - Joe's Burger House 2024-07-07.jpg" by Andy Li
+  CC0: https://creativecommons.org/publicdomain/zero/1.0/
+  Source: https://commons.wikimedia.org/wiki/File:Fancy_Veggie_Burger_and_Fries_-_Joe's_Burger_House_2024-07-07.jpg
