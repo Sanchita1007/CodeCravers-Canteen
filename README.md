@@ -3,6 +3,21 @@
 A beginner-friendly Java web application for a college canteen. It uses HTML, CSS,
 JavaScript, Java Servlets, JDBC, MySQL, and Apache Tomcat 10.1.
 
+Project Status
+The CodeCravers Canteen Food Ordering System is deployed on Render. The homepage, menu interface, food images, and browser-based cart have been tested.
+
+The Java Servlet and JDBC backend is designed to support student accounts, order placement, order history, and admin operations using MySQL.
+
+Pending: Online MySQL database configuration and end-to-end verification of database-backed features on the deployed website.
+
+Live Website: https://codecravers-canteen.onrender.com/
+
+GitHub Repository: https://github.com/Sanchita1007/CodeCravers-Canteen
+
+Project Report and Viva Preparation: PROJECT_REPORT_AND_VIVA.md
+
+Review 1 Presentation: CodeCravers_Review_1.pptx
+
 ## Current implementation
 
 This project addresses the time and coordination problems of manual canteen
