@@ -2,53 +2,56 @@
 
 ## 📖 About the Project
 
-CodeCravers is a Java-based web application developed to digitalize the traditional college canteen food ordering process. It provides students with a convenient platform to browse food items, place orders, generate bills and view their order history.
+CodeCravers is a full-stack Java-based web application designed to digitalize the traditional college canteen food ordering process.
 
-The system also provides an admin dashboard to manage food items and prices.
+The system allows students to browse food items, manage their shopping cart, place orders, generate bills and view their order history. Administrators can manage food items, prices and availability through a dedicated dashboard.
 
-This project is developed by a team of three B.Tech CSE (AIML) students at Galgotias University.
+Developed by a team of three B.Tech CSE (AIML) students at Galgotias University.
 
 ## 🌐 Live Website
 
 https://codecravers-canteen.onrender.com/
 
+The application is deployed on Render using Docker and connected to a MySQL-compatible TiDB Cloud database.
+
 ## 🎯 Project Objectives
 
-- Digitalize the traditional canteen ordering process.
-- Reduce waiting time and manual work.
-- Provide a user-friendly ordering experience.
-- Automate bill generation and order management.
-- Integrate frontend and backend technologies with a relational database.
-- Provide separate access for students and administrators.
+- Digitalize college canteen operations.
+- Reduce manual work and waiting time.
+- Provide a convenient food ordering experience.
+- Automate billing and order management.
+- Maintain centralized food and order records.
+- Provide role-based access for students and administrators.
 
 ## ✨ Key Features
 
 ### Student Module
 
-- Student registration
-- Student login
-- Food menu browsing
-- Shopping cart
+- Student registration and authentication
+- Live database-driven food menu
+- Shopping cart management
+- Automatic price calculation
 - Checkout and order placement
+- Cash and simulated online payment options
 - Automatic bill generation
 - Order history
 
 ### Admin Module
 
 - Admin authentication
-- Admin dashboard
+- Dedicated admin dashboard
 - Add new food items
-- Update food item prices
-- Remove food items from the available menu
-- Manage the student-facing menu
+- Update food prices
+- Manage food availability
+- Remove items from the available menu
 
-### Security Features
+### Security
 
 - Role-based access control
-- Password hashing using PBKDF2
-- Prepared statements
-- Server-side input validation
+- PBKDF2 password hashing
+- Prepared SQL statements
 - Session-based authentication
+- Server-side input validation
 - CSRF protection
 - Environment-based database credentials
 
@@ -56,105 +59,131 @@ https://codecravers-canteen.onrender.com/
 
 | Technology | Purpose |
 |---|---|
-| HTML5 | Webpage structure |
+| HTML5 | Website structure |
 | CSS3 | Styling and layout |
 | JavaScript | Frontend interactivity |
-| Java 21 | Backend programming |
-| Jakarta Servlets 6.0 | Request and response handling |
+| Java 21 | Backend development |
+| Jakarta Servlets 6.0 | Request and response processing |
 | JDBC | Database connectivity |
-| MySQL | Database management |
-| Apache Tomcat 10.1.60 | Application server |
+| MySQL | Local database |
+| TiDB Cloud | Online relational database |
+| Apache Tomcat 10.1 | Application server |
 | Maven | Build and dependency management |
-| Docker | Deployment configuration |
+| Docker | Containerization |
+| Render | Cloud deployment |
 | GitHub | Version control |
-| Render | Online hosting |
 
 ## 🏗️ System Architecture
 
-```
-Student / Administrator
-          |
-          v
-Frontend (HTML, CSS, JavaScript)
-          |
-          v
-Apache Tomcat Server
-          |
-          v
-Java Servlets (Backend)
-          |
-          v
-JDBC (Database Connectivity)
-          |
-          v
-MySQL Database
+```mermaid
+flowchart TD
+    A[Student / Administrator] --> B[HTML, CSS, JavaScript]
+    B --> C[Apache Tomcat]
+    C --> D[Java Servlet Backend]
+    D --> E[JDBC]
+    E --> F[(TiDB Cloud Database)]
 ```
 
-The frontend handles user interactions, while Java Servlets process requests, execute business logic and communicate with the MySQL database through JDBC.
+The frontend handles user interactions, while Java Servlets process requests and communicate with the cloud database using JDBC.
 
-## 📁 Important Project Files
+## 📁 Project Structure
 
-| File | Description |
+| File | Purpose |
 |---|---|
-| index.html | Website homepage |
+| index.html | Homepage |
 | menu.html | Food menu |
-| cart.html | Shopping cart |
+| cart.html | Shopping cart and checkout |
 | site.css | Website styling |
+| assets/ | Website assets |
 | CanteenServlet.java | Backend application logic |
-| DatabaseConnection.java | MySQL database connectivity |
+| DatabaseConnection.java | JDBC database connectivity |
 | PasswordUtil.java | Password hashing utility |
 | HelloServlet.java | Servlet connectivity testing |
+| database.sql | Database schema |
 | web.xml | Web application configuration |
-| pom.xml | Maven build configuration |
-| Dockerfile | Deployment configuration |
+| pom.xml | Maven configuration |
+| Dockerfile | Cloud deployment configuration |
+| .gitignore | Version control exclusions |
 | README.md | Project documentation |
 | PROJECT_REPORT_AND_VIVA.md | Project report and viva preparation |
 
 ## 🗄️ Database Design
 
-**Database name:** canteen_db
+Database Name: `canteen_db`
 
-The application uses the following documented database tables:
+| Table | Purpose | Primary Key |
+|---|---|---|
+| users | User accounts and roles | user_id |
+| food_items | Food details and prices | food_id |
+| orders | Order information | order_id |
+| order_items | Individual ordered items | order_item_id |
 
-| Table | Purpose |
-|---|---|
-| users | Stores user accounts and roles |
-| food_items | Stores food details and prices |
-| orders | Stores order information |
-| order_items | Stores individual items within orders |
+### Entity Relationship Diagram
 
-The database is connected to the Java backend using JDBC and MySQL Connector/J.
+```mermaid
+erDiagram
+    USERS ||--o{ ORDERS : places
+    ORDERS ||--o{ ORDER_ITEMS : contains
+    FOOD_ITEMS ||--o{ ORDER_ITEMS : references
 
-The database schema and physical foreign-key constraints are pending final documentation.
+    USERS {
+        int user_id PK
+        varchar name
+        varchar email UK
+        varchar password
+        enum role
+        timestamp created_at
+    }
 
-## ⚙️ Installation and Setup
+    FOOD_ITEMS {
+        int food_id PK
+        varchar name
+        varchar description
+        decimal price
+        tinyint available
+    }
+
+    ORDERS {
+        int order_id PK
+        int user_id FK
+        decimal total_amount
+        enum payment_method
+        enum status
+        timestamp created_at
+    }
+
+    ORDER_ITEMS {
+        int order_item_id PK
+        int order_id FK
+        int food_id FK
+        int quantity
+        decimal price
+    }
+```
+
+## ⚙️ Local Installation and Setup
 
 ### Prerequisites
 
 - Java Development Kit 21
-- Apache Tomcat 10.1.60
+- Apache Tomcat 10.1
 - MySQL Server
-- MySQL Connector/J 8.4.0
+- MySQL Connector/J
 - Apache Maven
 - Git
 
 ### 1. Clone the Repository
 
-```
+```bash
 git clone https://github.com/Sanchita1007/CodeCravers-Canteen.git
 cd CodeCravers-Canteen
 ```
 
 ### 2. Configure the Database
 
-Create the MySQL database:
+Execute the `database.sql` file in MySQL Workbench to create the database and required tables.
 
-```sql
-CREATE DATABASE IF NOT EXISTS canteen_db;
-USE canteen_db;
-```
-
-The application tables must be created using the project database schema before running the application. The complete schema is pending upload.
+Add food items to the database using the admin dashboard after configuring an administrator account.
 
 ### 3. Configure Environment Variables
 
@@ -164,79 +193,92 @@ The application tables must be created using the project database schema before 
 | CANTEEN_DB_USER | Your MySQL username |
 | CANTEEN_DB_PASSWORD | Your MySQL password |
 
-Configure these variables locally before starting Tomcat. Never commit actual database passwords to GitHub.
+Configure these variables before starting Tomcat.
 
-### 4. Configure Apache Tomcat
+Never commit actual database credentials to GitHub.
 
-- Configure JAVA_HOME and CATALINA_HOME.
-- Configure the database environment variables.
-- Ensure MySQL Server is running.
-- Place MySQL Connector/J in the Tomcat lib directory for the local manual deployment setup.
+### 4. Build the Application
 
-### 5. Build and Deploy
-
-Build the application using Maven:
-
-```
+```bash
 mvn clean package
 ```
 
-Deploy the generated WAR file to Apache Tomcat using Canteen as the application context.
+### 5. Deploy and Run
 
-Start Apache Tomcat and open:
+- Configure JAVA_HOME and CATALINA_HOME.
+- Ensure MySQL Server is running.
+- Deploy the generated WAR file as Canteen.war in Tomcat's webapps directory.
+- Start Apache Tomcat.
+
+Open:
 
 http://localhost:8080/Canteen/
 
-## 🎨 UI/UX Design
+## ☁️ Cloud Deployment
 
-The user interface is designed around the following principles:
+The online application uses:
+
+- Render Docker Web Service
+- Apache Tomcat
+- Java 21
+- MySQL Connector/J
+- TiDB Cloud
+- Secure TLS database connectivity
+- Environment-based database configuration
+
+The hosted application operates independently of the local development computer.
+
+## 🎨 UI/UX Design Principles
 
 - Simplicity
 - Consistency
 - Visual hierarchy
-- User-friendly navigation
-- Readability
-- Clear presentation of food items and prices
+- Clear navigation
+- Readable typography
+- Attractive food cards
+- Interactive shopping cart
+- Clear error messages
 - Adaptive layouts using CSS media queries
 
-Desktop and mobile responsiveness testing will be documented separately.
+Formal desktop and mobile responsiveness testing is pending documentation.
 
-## 🧪 Software Testing
+## 🧪 Live Website Testing
 
-The following results were recorded during local development testing.
-
-| Test Case | Expected Result | Status |
+| Test ID | Feature | Status |
 |---|---|---|
-| Student registration | Account successfully created | Passed |
-| Valid login | User successfully logged in | Passed |
-| Invalid login | Access denied | Passed |
-| Food menu | Database food items displayed | Passed |
-| Add to cart | Food item added to cart | Passed |
-| Empty cart checkout | Checkout prevented | Passed |
-| Order placement | Order successfully placed | Passed |
-| Bill generation | Bill displayed | Passed |
-| Order history | Previous orders displayed | Passed |
-| Admin login | Admin dashboard accessible | Passed |
-| Add food item | New food item displayed | Passed |
-| Update food price | Updated price reflected | Passed |
-| Remove food item | Item removed from student menu | Passed |
-| Unauthorized admin access | HTTP 403 Forbidden | Passed |
+| TC01 | Cloud database connectivity | Passed |
+| TC02 | Live food menu | Passed |
+| TC03 | Student registration | Passed |
+| TC04 | Student login | Passed |
+| TC05 | Shopping cart | Passed |
+| TC06 | Checkout | Passed |
+| TC07 | Order placement | Passed |
+| TC08 | Automatic billing | Passed |
+| TC09 | Order history | Passed |
+| TC10 | Admin login | Passed |
+| TC11 | Admin dashboard | Passed |
+| TC12 | Add food items | Passed |
+| TC13 | Update food prices | Passed |
+| TC14 | Remove food items | Passed |
+| TC15 | Unauthorized admin access prevention | Passed |
 
-These results refer to local testing. The published repository and hosted application require final synchronization and verification.
+**Manual live testing result: 15/15 tests passed.**
 
 ## 💡 Innovation and Extra Effort
 
-- Centralized food menu management
-- Role-based student and administrator access
-- Automated bill generation
+- Fully hosted Java web application
+- Cloud-based relational database
+- Docker-based deployment
+- Live food availability management
+- Automatic billing
 - Student order history
-- Database-driven food menu
-- Online deployment configuration
+- Role-based access control
+- Secure external database configuration
 
 ## 🚀 Future Scope
 
-- Online payment integration
-- Real-time order status tracking
+- Real online payment integration
+- Real-time order tracking
 - QR code-based ordering
 - Email notifications
 - Food ratings and feedback
@@ -245,28 +287,24 @@ These results refer to local testing. The published repository and hosted applic
 
 ## 👥 Development Team
 
-**Team Name:** CodeCravers
-
-**University:** Galgotias University
-
-**Programme:** B.Tech CSE (Artificial Intelligence and Machine Learning)
-
-**Team Size:** 3 Members
+- **Team Name:** CodeCravers
+- **University:** Galgotias University
+- **Programme:** B.Tech CSE (Artificial Intelligence and Machine Learning)
+- **Team Size:** 3 Members
 
 ## 📄 Project Documentation
 
-For additional project details and viva preparation, refer to [PROJECT_REPORT_AND_VIVA.md](PROJECT_REPORT_AND_VIVA.md).
+- [Database Schema](database.sql)
+- [Project Report and Viva](PROJECT_REPORT_AND_VIVA.md)
 
-## 📌 Project Status
+## ✅ Project Status
 
 - Frontend development completed
 - Backend development completed
-- Local database connectivity tested
+- Database integration completed
+- Cloud deployment completed
 - Student module tested
 - Admin module tested
-- 
 
----
-
-Developed by Team CodeCravers | Galgotias University
+**Developed by Team CodeCravers | Galgotias University**
 
