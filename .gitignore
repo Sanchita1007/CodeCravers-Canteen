@@ -1,0 +1,39 @@
+# Compiled Java files
+*.class
+
+# Maven build output
+target/
+
+# Generated application archives
+*.war
+*.jar
+
+# Sensitive configuration files
+.env
+.env.*
+!.env.example
+config.properties
+secrets.properties
+
+# IDE configuration
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+*.iml
+
+# Apache Tomcat generated files
+logs/
+temp/
+work/
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary and backup files
+*.tmp
+*.bak
