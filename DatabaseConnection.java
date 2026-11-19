@@ -21,8 +21,30 @@ public class DatabaseConnection {
                     URL_SETTING + " must start with jdbc:mysql://.");
         }
 
-        // Connector/J registers its driver automatically when Maven loads it.
-        return DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
+        // Explicitly load the MySQL JDBC driver.
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("MySQL JDBC driver not found.");
+            throw new SQLException("MySQL JDBC driver not found.", e);
+        }
+
+        // Establish database connection.
+        try {
+            return DriverManager.getConnection(
+                    databaseUrl, databaseUser, databasePassword);
+        } catch (SQLException e) {
+            System.err.println("Database connection failed.");
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+
+            if (e.getCause() != null) {
+                System.err.println("Cause: " 
+                        + e.getCause().getClass().getName());
+            }
+
+            throw e;
+        }
     }
 
     private static String getRequiredSetting(String settingName) {
