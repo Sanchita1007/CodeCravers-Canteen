@@ -8,7 +8,8 @@ FROM tomcat:10.1-jdk21-temurin
 
 ENV PORT=8080
 
-RUN sed -i 's/port="8080"/port="${http.port}"/' "$CATALINA_HOME/conf/server.xml" \
+RUN sed -i 's/port="8005"/port="-1"/' "$CATALINA_HOME/conf/server.xml" \
+    && sed -i 's/port="8080"/port="${http.port}"/' "$CATALINA_HOME/conf/server.xml" \
     && rm -rf "$CATALINA_HOME/webapps/ROOT" "$CATALINA_HOME/webapps/ROOT.war"
 
 COPY --from=build /workspace/target/CodeCraversCanteen.war /usr/local/tomcat/webapps/ROOT.war
