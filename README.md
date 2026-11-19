@@ -1,275 +1,272 @@
-# CodeCravers Canteen Food Ordering System
+# 🍔 CodeCravers – Canteen Food Ordering System
 
-A beginner-friendly Java web application for a college canteen. It uses HTML, CSS,
-JavaScript, Java Servlets, JDBC, MySQL, and Apache Tomcat 10.1.
+## 📖 About the Project
 
-Project Status
-The CodeCravers Canteen Food Ordering System is deployed on Render. The homepage, menu interface, food images, and browser-based cart have been tested.
+CodeCravers is a Java-based web application developed to digitalize the traditional college canteen food ordering process. It provides students with a convenient platform to browse food items, place orders, generate bills and view their order history.
 
-The Java Servlet and JDBC backend is designed to support student accounts, order placement, order history, and admin operations using MySQL.
+The system also provides an admin dashboard to manage food items and prices.
 
-Pending: Online MySQL database configuration and end-to-end verification of database-backed features on the deployed website.
+This project is developed by a team of three B.Tech CSE (AIML) students at Galgotias University.
 
-Live Website: https://codecravers-canteen.onrender.com/
+## 🌐 Live Website
 
-GitHub Repository: https://github.com/Sanchita1007/CodeCravers-Canteen
+https://codecravers-canteen.onrender.com/
 
-Project Report and Viva Preparation: PROJECT_REPORT_AND_VIVA.md
+## 🎯 Project Objectives
 
-Review 1 Presentation: CodeCravers_Review_1.pptx
+- Digitalize the traditional canteen ordering process.
+- Reduce waiting time and manual work.
+- Provide a user-friendly ordering experience.
+- Automate bill generation and order management.
+- Integrate frontend and backend technologies with a relational database.
+- Provide separate access for students and administrators.
 
-## Current implementation
+## ✨ Key Features
 
-This project addresses the time and coordination problems of manual canteen
-ordering by providing a menu, a browser cart, and Java server routes for
-student accounts and order handling. The current code aims to let students
-browse items and prepare orders, and to let authorized admins manage foods and
-review orders.
+### Student Module
 
-- Orange, cream, and charcoal homepage, searchable menu, and browser shopping
-  cart.
-- The menu code requests the existing `canteen_db.food_items` data. Its 24 sample
-  dishes are clearly identified as examples when the database is unavailable
-  or has no food rows; sample dishes have no MySQL IDs and cannot be checked
-  out as database-backed food.
-- Servlet code is present for student registration/login with salted
-  PBKDF2-HMAC-SHA256 password hashes.
-- Servlet code is present for student checkout, server-side price and
-  availability checks, order transactions, order history, and bills.
-- Admin servlet routes are present for food changes, availability, recent
-  orders, and status updates. These actions require an `ADMIN` session.
-- There is no separate kitchen login in the confirmed existing schema: the
-  current `users.role` enum supports only `STUDENT` and `ADMIN`. Admins can view
-  orders and set the confirmed preparation statuses.
-- The admin status choices are limited to `PLACED`, `ACCEPTED`, and `PREPARING`,
-  the values confirmed for the existing database. Other enum values are not
-  assumed.
-- `ONLINE` is a simulated payment choice. The project does not collect or send
-  real payment details.
+- Student registration
+- Student login
+- Food menu browsing
+- Shopping cart
+- Checkout and order placement
+- Automatic bill generation
+- Order history
 
-The Java/JDBC account, ordering, and admin routes have not been tested with
-MySQL in the current environment; see the verification section below.
+### Admin Module
 
-## Main modules and workflow
+- Admin authentication
+- Admin dashboard
+- Add new food items
+- Update food item prices
+- Remove food items from the available menu
+- Manage the student-facing menu
 
-The static homepage and menu link to the menu, cart, login, orders, and admin
-routes. The menu stores selected items in browser `localStorage` using the
-existing `cart` key. Database-backed foods also carry a `foodId`; sample menu
-items intentionally do not. At checkout, the servlet is designed to accept
-food IDs and quantities, look up current prices from MySQL, and save the order
-and its items together. Students' order queries are restricted to their
-session user ID; admin changes check the session role.
+### Security Features
 
-The confirmed schema relationships used by the queries are `orders.user_id` to
-`users.user_id`, `order_items.order_id` to `orders.order_id`, and
-`order_items.food_id` to `food_items.food_id`. The actual MySQL foreign-key
-constraints were not independently inspected. A Mermaid architecture diagram
-and ER diagram are in
-[`PROJECT_REPORT_AND_VIVA.md`](./PROJECT_REPORT_AND_VIVA.md).
+- Role-based access control
+- Password hashing using PBKDF2
+- Prepared statements
+- Server-side input validation
+- Session-based authentication
+- CSRF protection
+- Environment-based database credentials
 
-## Existing project layout
+## 🛠️ Technology Stack
 
-```text
-Canteen/
-  index.html
-  menu.html
-  cart.html
-  site.css
-  pom.xml
-  README.md
-  PROJECT_REPORT_AND_VIVA.md
-  REVIEW_1_PRESENTATION.pptx
-  CodeCravers_Review_1.pptx
-  WEB-INF/
-    web.xml
-    classes/
-      CanteenServlet.java
-      DatabaseConnection.java
-      PasswordUtil.java
-      HelloServlet.java
-      *.class (current deployed compilation output)
-    lib/
-      mysql-connector-j-8.4.0.jar
+| Technology | Purpose |
+|---|---|
+| HTML5 | Webpage structure |
+| CSS3 | Styling and layout |
+| JavaScript | Frontend interactivity |
+| Java 21 | Backend programming |
+| Jakarta Servlets 6.0 | Request and response handling |
+| JDBC | Database connectivity |
+| MySQL | Database management |
+| Apache Tomcat 10.1.60 | Application server |
+| Maven | Build and dependency management |
+| Docker | Deployment configuration |
+| GitHub | Version control |
+| Render | Online hosting |
+
+## 🏗️ System Architecture
+
+```
+Student / Administrator
+          |
+          v
+Frontend (HTML, CSS, JavaScript)
+          |
+          v
+Apache Tomcat Server
+          |
+          v
+Java Servlets (Backend)
+          |
+          v
+JDBC (Database Connectivity)
+          |
+          v
+MySQL Database
 ```
 
-The Java sources are kept in the existing deployed `WEB-INF/classes` folder
-rather than a conventional `src/main/java` folder. The Maven project uses that
-folder as its source directory, compiles to the configured build folder
-outside `webapps`, and includes the static pages, `site.css`, and `web.xml` in
-the WAR. The running expanded webapp has the POM-declared Connector/J jar in
-`WEB-INF/lib`. Maven was not available for a WAR packaging verification.
+The frontend handles user interactions, while Java Servlets process requests, execute business logic and communicate with the MySQL database through JDBC.
 
-## Existing database
+## 📁 Important Project Files
 
-The application expects the existing database named `canteen_db`, with these
-confirmed columns:
+| File | Description |
+|---|---|
+| index.html | Website homepage |
+| menu.html | Food menu |
+| cart.html | Shopping cart |
+| site.css | Website styling |
+| CanteenServlet.java | Backend application logic |
+| DatabaseConnection.java | MySQL database connectivity |
+| PasswordUtil.java | Password hashing utility |
+| HelloServlet.java | Servlet connectivity testing |
+| web.xml | Web application configuration |
+| pom.xml | Maven build configuration |
+| Dockerfile | Deployment configuration |
+| README.md | Project documentation |
+| PROJECT_REPORT_AND_VIVA.md | Project report and viva preparation |
 
-- `users`: `user_id`, `name`, `email`, `password`, `role`, `created_at`
-- `food_items`: `food_id`, `name`, `description`, `price`, `available`
-- `orders`: `order_id`, `user_id`, `total_amount`, `payment_method`, `status`,
-  `created_at`
-- `order_items`: `order_item_id`, `order_id`, `food_id`, `quantity`, `price`
+## 🗄️ Database Design
 
-This project does not create, drop, or alter these tables. No setup SQL is
-included because the database already exists. The implementation relies on
-`orders.order_id` being an auto-increment key that MySQL can return after insert.
+**Database name:** canteen_db
 
-## Build requirements
+The application uses the following documented database tables:
 
-- JDK 11 or newer. The code is compiled to Java 11 bytecode.
-- Apache Tomcat 10.1.
-- Apache Maven 3.8 or newer.
-- MySQL Server with the existing `canteen_db` database.
+| Table | Purpose |
+|---|---|
+| users | Stores user accounts and roles |
+| food_items | Stores food details and prices |
+| orders | Stores order information |
+| order_items | Stores individual items within orders |
 
-Tomcat 10.1 provides Jakarta Servlet 6.0. Maven therefore marks the Servlet API
-as `provided`; it is not copied into the application. MySQL Connector/J is a
-runtime dependency and is included in the built WAR under `WEB-INF/lib`.
+The database is connected to the Java backend using JDBC and MySQL Connector/J.
 
-## Database connection settings
+The database schema and physical foreign-key constraints are pending final documentation.
 
-The app reads these environment variables; it never stores the password in code:
+## ⚙️ Installation and Setup
 
-- `CANTEEN_DB_URL`, normally `jdbc:mysql://localhost:3306/canteen_db`
-- `CANTEEN_DB_USER`, your local MySQL account name
-- `CANTEEN_DB_PASSWORD`, that account's password
+### Prerequisites
 
-In a PowerShell window used only to start Tomcat, set the URL and user first.
-For the password, use the secure prompt below (do not put a real password in
-this README, Java source, or a command you save):
+- Java Development Kit 21
+- Apache Tomcat 10.1.60
+- MySQL Server
+- MySQL Connector/J 8.4.0
+- Apache Maven
+- Git
 
-```powershell
-$env:CANTEEN_DB_URL = 'jdbc:mysql://localhost:3306/canteen_db'
-$env:CANTEEN_DB_USER = Read-Host 'MySQL username'
-$secret = Read-Host 'MySQL password' -AsSecureString
-$pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
-try {
-    $env:CANTEEN_DB_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
-} finally {
-    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
-}
-$env:JAVA_HOME = 'C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
-$env:CATALINA_HOME = 'C:\apache-tomcat-10.1.60'
-& "$env:CATALINA_HOME\bin\startup.bat"
+### 1. Clone the Repository
+
+```
+git clone https://github.com/Sanchita1007/CodeCravers-Canteen.git
+cd CodeCravers-Canteen
 ```
 
-Environment variables are inherited by child processes, so start Tomcat from
-the same PowerShell window after setting them. Restart Tomcat after changing
-settings. Do not paste secrets into chat or commit them.
+### 2. Configure the Database
 
-## Build and deploy
+Create the MySQL database:
 
-From PowerShell:
+```sql
+CREATE DATABASE IF NOT EXISTS canteen_db;
+USE canteen_db;
+```
 
-```powershell
-Set-Location 'C:\apache-tomcat-10.1.60\webapps\Canteen'
+The application tables must be created using the project database schema before running the application. The complete schema is pending upload.
+
+### 3. Configure Environment Variables
+
+| Variable | Value |
+|---|---|
+| CANTEEN_DB_URL | jdbc:mysql://localhost:3306/canteen_db |
+| CANTEEN_DB_USER | Your MySQL username |
+| CANTEEN_DB_PASSWORD | Your MySQL password |
+
+Configure these variables locally before starting Tomcat. Never commit actual database passwords to GitHub.
+
+### 4. Configure Apache Tomcat
+
+- Configure JAVA_HOME and CATALINA_HOME.
+- Configure the database environment variables.
+- Ensure MySQL Server is running.
+- Place MySQL Connector/J in the Tomcat lib directory for the local manual deployment setup.
+
+### 5. Build and Deploy
+
+Build the application using Maven:
+
+```
 mvn clean package
 ```
 
-The WAR is written outside the current deployed app:
+Deploy the generated WAR file to Apache Tomcat using Canteen as the application context.
 
-```text
-C:\apache-tomcat-10.1.60\build\CodeCraversCanteen\CodeCraversCanteen.war
-```
+Start Apache Tomcat and open:
 
-Deploy it under its own context name so the existing `/Canteen` directory is
-not overwritten:
+http://localhost:8080/Canteen/
 
-```powershell
-Copy-Item 'C:\apache-tomcat-10.1.60\build\CodeCraversCanteen\CodeCraversCanteen.war' `
-  'C:\apache-tomcat-10.1.60\webapps\CodeCraversCanteen.war'
-```
+## 🎨 UI/UX Design
 
-Tomcat deploys the WAR at `http://localhost:8080/CodeCraversCanteen/`. Maven was
-not available during the current coding session, so this build and WAR
-deployment have not yet been verified.
+The user interface is designed around the following principles:
 
-## First admin account
+- Simplicity
+- Consistency
+- Visual hierarchy
+- User-friendly navigation
+- Readability
+- Clear presentation of food items and prices
+- Adaptive layouts using CSS media queries
 
-Registration always creates a `STUDENT`. To grant admin access, register the
-intended account, then use MySQL Workbench while signed into your own database
-account to change only that account's `role` to `ADMIN`. Confirm the email
-carefully before running the update. This is a database data change; this app
-does not make that change automatically and does not contain a hardcoded admin
-password. Do not share the account password. In Workbench, first confirm the
-account:
+Desktop and mobile responsiveness testing will be documented separately.
 
-```sql
-SELECT user_id, name, email, role
-FROM users
-WHERE email = 'the-exact-email-you-registered';
-```
+## 🧪 Software Testing
 
-Only after confirming that it is the intended account, update that one unique
-email:
+The following results were recorded during local development testing.
 
-```sql
-UPDATE users
-SET role = 'ADMIN'
-WHERE email = 'the-exact-email-you-registered';
-```
+| Test Case | Expected Result | Status |
+|---|---|---|
+| Student registration | Account successfully created | Passed |
+| Valid login | User successfully logged in | Passed |
+| Invalid login | Access denied | Passed |
+| Food menu | Database food items displayed | Passed |
+| Add to cart | Food item added to cart | Passed |
+| Empty cart checkout | Checkout prevented | Passed |
+| Order placement | Order successfully placed | Passed |
+| Bill generation | Bill displayed | Passed |
+| Order history | Previous orders displayed | Passed |
+| Admin login | Admin dashboard accessible | Passed |
+| Add food item | New food item displayed | Passed |
+| Update food price | Updated price reflected | Passed |
+| Remove food item | Item removed from student menu | Passed |
+| Unauthorized admin access | HTTP 403 Forbidden | Passed |
 
-Do not run the update with a blank or guessed email.
+These results refer to local testing. The published repository and hosted application require final synchronization and verification.
 
-The app expects new passwords saved by this project to use its PBKDF2 format.
-Existing account password formats were not verified. If old passwords are
-plain text or use another hash format, the app intentionally will not accept
-them as though they were a secure PBKDF2 hash.
+## 💡 Innovation and Extra Effort
 
-## Manual test checklist
+- Centralized food menu management
+- Role-based student and administrator access
+- Automated bill generation
+- Student order history
+- Database-driven food menu
+- Online deployment configuration
 
-1. Open the homepage, menu, and cart on desktop and a narrow/mobile viewport.
-2. Confirm live food rows and availability appear when MySQL is configured.
-3. Register a student and verify that a repeated email receives an error.
-4. Log in with the new student; try a wrong password and verify it is rejected.
-5. Add menu items to the cart; change quantities, remove an item, and clear it.
-6. Place a cash order; confirm the bill has the server-calculated total.
-7. Try refreshing/replaying the order submission; it should not create a second
-   order using the same one-time checkout token.
-8. Open order history and confirm it lists only the logged-in student's orders.
-9. Register a separate account and grant it `ADMIN` in Workbench. Verify that
-   it can add/edit food, mark availability, view orders, and select only the
-   confirmed order statuses.
-10. Log in as a student and try `/app/admin`; access should be denied.
+## 🚀 Future Scope
 
-## Verification status for this workspace
+- Online payment integration
+- Real-time order status tracking
+- QR code-based ordering
+- Email notifications
+- Food ratings and feedback
+- Sales analytics dashboard
+- AI-based food recommendations
 
-- Java source compiled with `javac --release 11` against Tomcat's Servlet API.
-- Password hashing was checked: the right password verified and a wrong one
-  did not.
-- Tomcat served the homepage, menu, cart, registration form, and login form.
-- Student-only and admin-only pages redirected an unauthenticated visitor to
-  login.
-- Browser checks confirmed that all 24 sample dishes render, all four category
-  filters show the expected counts (8, 8, 4, and 4), search finds a dish, and
-  adding an item preserves the `cart` storage format. Quantity increase/decrease,
-  item removal, clear-cart, empty-cart, and total updates were also checked.
-- Homepage, menu, cart, login, and registration had no horizontal overflow at
-  390 pixels, and their navigation labels and shared theme were present. This
-  does not replace a full visual review or assistive-technology check.
-- The menu API returned `503` because no database settings were configured.
-- Maven is unavailable, so WAR packaging has not been verified. The
-  POM-declared Connector/J 8.4.0 jar was available in the local cache, was
-  added to this expanded webapp, and its JDBC driver class-load test passed.
-  Registration, actual MySQL queries, checkout, and admin updates have not
-  been tested against the database.
-- Responsive CSS breakpoints are present, but a full visual review on desktop
-  and mobile devices remains to be done.
+## 👥 Development Team
 
-## Review 1 readiness
+**Team Name:** CodeCravers
 
-The application uses a simple two-part structure: static pages and the shared
-stylesheet are served by Tomcat, and `/app/*` requests are handled by
-`CanteenServlet`. The servlet reads the existing database through
-`DatabaseConnection` and JDBC. The cart itself is stored in browser
-`localStorage` until checkout.
+**University:** Galgotias University
 
-The Mermaid architecture and ER diagrams, a concise Review 1 checklist, and a
-slide-by-slide presentation outline are in
-[`PROJECT_REPORT_AND_VIVA.md`](./PROJECT_REPORT_AND_VIVA.md).
-The current editable, 16-slide Review 1 deck is
-[`CodeCravers_Review_1.pptx`](./CodeCravers_Review_1.pptx). Fill in team,
-roll-number, university, and department placeholders before presenting. Its UI
-screenshots show the actual local homepage, sample-fallback menu, and empty
-cart; database-backed behavior is explicitly marked unverified.
+**Programme:** B.Tech CSE (Artificial Intelligence and Machine Learning)
 
+**Team Size:** 3 Members
+
+## 📄 Project Documentation
+
+For additional project details and viva preparation, refer to [PROJECT_REPORT_AND_VIVA.md](PROJECT_REPORT_AND_VIVA.md).
+
+## 📌 Project Status
+
+- Frontend development completed
+- Backend development completed
+- Local database connectivity tested
+- Student module tested
+- Admin module tested
+- 
+
+---
+
+Developed by Team CodeCravers | Galgotias University
 
