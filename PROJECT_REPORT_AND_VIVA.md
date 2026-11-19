@@ -464,3 +464,117 @@ No. The Java code compiled, basic Tomcat routes responded, and password hashing
 was checked. The database settings were not configured, so registration,
 database menu loading, checkout, order history, and admin database actions
 still require end-to-end testing.
+---
+
+# Review 2 – Project Implementation and Progress
+
+## 1. Current Implementation Status
+
+The CodeCravers Canteen Food Ordering System has been successfully deployed online and integrated with a cloud database.
+
+Both student and administrator modules have passed manual live functionality testing.
+
+**Live Website:** https://codecravers-canteen.onrender.com/
+
+## 2. Cloud Deployment Architecture
+
+- Frontend: HTML, CSS and JavaScript
+- Backend: Java 21 and Jakarta Servlets
+- Application Server: Apache Tomcat
+- Database Connectivity: JDBC
+- Local Database: MySQL
+- Cloud Database: TiDB Cloud
+- Containerization: Docker
+- Hosting Platform: Render
+- Version Control: GitHub
+
+## 3. Database Design
+
+The relational database consists of four tables:
+
+- users
+- food_items
+- orders
+- order_items
+
+Primary keys uniquely identify records, while foreign keys establish relationships between tables.
+
+Database credentials are configured using environment variables rather than hardcoded values.
+
+## 4. Project Planning
+
+| Phase | Activity | Status |
+|---|---|---|
+| Phase 1 | Requirement analysis | Completed |
+| Phase 2 | System and database design | Completed |
+| Phase 3 | Frontend development | Completed |
+| Phase 4 | Java backend development | Completed |
+| Phase 5 | Database integration | Completed |
+| Phase 6 | Local functionality testing | Completed |
+| Phase 7 | Cloud deployment | Completed |
+| Phase 8 | Troubleshooting and live testing | Completed |
+| Phase 9 | Review 2 documentation | In Progress |
+| Phase 10 | Final presentation | Pending |
+
+## 5. UI/UX Design Principles
+
+- Simplicity and usability
+- Consistent colour scheme
+- Clear navigation
+- Visual hierarchy
+- Readable typography
+- Interactive food cards
+- Clear button labels
+- Error prevention and feedback
+- Adaptive layouts using CSS media queries
+
+Formal mobile responsiveness testing is pending.
+
+## 6. Code Quality
+
+- Modular Java classes
+- Meaningful variable and method names
+- Code comments
+- Prepared SQL statements
+- Password hashing
+- Exception handling
+- Server-side validation
+- Role-based authorization
+- External database configuration
+
+## 7. Challenges Faced and Solutions
+
+| Challenge | Solution |
+|---|---|
+| HTTP 503 database error | Cloud database integration |
+| Tomcat port conflict | Dockerfile configuration |
+| JDBC driver loading failure | Explicit driver loading |
+| Disabled checkout button | Removal of stale browser cart data |
+| Local database dependency | Migration of schema and menu data to TiDB Cloud |
+
+## 8. Testing Results
+
+- Total manual live tests: 15
+- Passed: 15
+- Failed after retesting: 0
+- Pass percentage: 100%
+
+Detailed test cases are available in TESTING.md.
+
+## 9. Innovation and Extra Effort
+
+- Live cloud deployment
+- Cloud-based relational database
+- Docker containerization
+- Dynamic food menu management
+- Automatic bill generation
+- Role-based access control
+- Student order history
+
+## 10. Conclusion
+
+The CodeCravers project demonstrates the practical integration of frontend development, Java programming, relational databases and cloud computing to address a real-world college canteen management problem.
+
+The implemented and tested features provide a foundation for future improvements.
+
+This section reflects the latest Review 2 implementation status and supersedes earlier development status descriptions.
